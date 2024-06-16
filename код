@@ -1,4 +1,4 @@
-class Domino:
+class Domino:  # Инициализация класса Domino с левой и правой
     def __init__(self, left, right):
         self.left = left
         self.right = right
@@ -9,35 +9,36 @@ class Domino:
         self.three = None
 
 class DominoList:
-    def __iter__(self):
+    def __iter__(self): # Реализация итератора для перебора элементов списка
         current = self.head
         while current:
             yield current
             current = current.next
     
-    def __init__(self):
-        self.head = None
+    def __init__(self): # Инициализация списка домино
+        self.head = None 
         self.tail = None
         
-    def validate_domino(self, left, right):
+    def validate_domino(self, left, right): # проверка на повторяющиеся доминошки
         for domino in self:
             if (domino.left == left and domino.right == right) or (domino.left == right and domino.right == left):
                 raise ValueError("Такой домино уже существует или является зеркальным")
 
-    def add_domino(self, left, right):
+    def add_domino(self, left, right): # добавление доминошки в список
         domino = Domino(left, right)
         if not self.head:
-            self.head = domino
-            self.tail = domino
+            self.head = domino # при мустом списке доминошка становиться головой
+            self.tail = domino # и хвостом
         else:
-            domino.prev = self.tail
+            domino.prev = self.tail # установка предыдушего элемента для новой доминошки
             self.tail.next = domino
             self.tail = domino
 
-    def can_lay_out(self):
+    def can_lay_out(self): # проверка всех вариантов цепи из домино
         current = self.head
         while current:
 
+# основная проверка первой
 # 1 и 2            
             if current.one:
                 if current.right == current.two.left:
@@ -46,7 +47,7 @@ class DominoList:
                     current = current.two
                 elif current.left == current.two.left:
                     current = current.two
-                elif current.left == current.two.right: # 23 12
+                elif current.left == current.two.right: 
                     current.one, current.two = current.two, current.one
                     current = current.two
 
@@ -69,6 +70,8 @@ class DominoList:
                         return False
                 else:
                         return False
+                        
+ # основная проверка второй
  #2 и 3                   
             if current.two:
                 if current.right == current.three.left:
@@ -87,35 +90,38 @@ class DominoList:
                 break
         return True
 
-    def print_dominoes(self):
+    def print_dominoes(self): # вывод всех длминошек в список
         current = self.head
         while current:
             print(f"{current.left}{current.right}", end=" ")
             current = current.next
         print()
 
+# основеая функция программы
 def main():
-    domino_list = DominoList()
+    domino_list = DominoList() # ввод доминошек
     dominoes = input("Введите кости домино через пробел: ").split()
     if len(dominoes) > 3:
         print("Вы ввели более трех домино. Введите не более трех домино.")
         return
     try:
+        # зашита от дурака
         for domino in dominoes:
-            if not all(c.isdigit() for c in domino):
+            if not all(c.isdigit() for c in domino): # проверка корректности символов
                 raise ValueError("Вы ввели некорректные символы. Введите только цифры.")
-            left, right = int(domino[0]), int(domino[1])
-            if left > 6 or right > 6 or left < 0 or right < 0:
+            left, right = int(domino[0]), int(domino[1]) # преобразование входных данных в числа(в доминошки)
+            if left > 6 or right > 6 or left < 0 or right < 0: # диапазон
                 raise ValueError("Некорректные входные данные")
-            domino_list.validate_domino(left, right)
-            domino_list.add_domino(left, right)
-        if domino_list.can_lay_out():
-            print("Можно, ", end="")
+            domino_list.validate_domino(left, right) # антиповтор доминошек
+            domino_list.add_domino(left, right) # домино в список
+        if domino_list.can_lay_out(): #вывод результата
+            print("Можно выложить данные кости в ряд ", end="")
             domino_list.print_dominoes()
-        else:
-            print("Нельзя выложить кости в ряд")
-    except ValueError as e:
+        else: 
+            print("Нельзя выложить данные кости в ряд")
+    except ValueError as e: 
         print(e)
 
+#вызов функции при запуске скрипта
 if __name__ == "__main__":
     main()
