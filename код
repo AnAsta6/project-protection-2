@@ -52,6 +52,7 @@ class DominoList:
     def can_lay_out(self):
         current = self.head
         while current:
+            
             if current.one:
                 if current.right == current.two.left:
                     current = current.two
@@ -62,18 +63,19 @@ class DominoList:
                 elif current.left == current.two.right: # 23 12
                     current.one, current.two = current.two, current.one
                     current = current.two
-                    
-                if current.right == current.three.left:
-                    current = current.three
-                elif current.right == current.three.right:
-                    current = current.three
-                elif current.left == current.three.left:
-                    current = current.three
-                elif current.left == current.three.right: # 23 12
-                    current.one, current.three = current.three, current.one
-                    current = current.three
-                else:
-                    return False
+                
+                if (current.two.left==current.three.left) or (current.two.left==current.three.right) or (current.two.right==current.three.right) or (current.two.right==current.three.left) or (current.two.left==current.one.left) or (current.two.left==current.one.right) or (current.two.right==current.one.right) or (current.two.right==current.one.left):  
+                    if current.right == current.three.left:
+                        current = current.three
+                    elif current.right == current.three.right:
+                        current = current.three
+                    elif current.left == current.three.left:
+                        current = current.three
+                    elif current.left == current.three.right: # 23 12
+                        current.one, current.three = current.three, current.one
+                        current = current.three
+                    else:
+                        return False
                     
             if current.two:
                 if current.right == current.three.left:
