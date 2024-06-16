@@ -2,8 +2,6 @@ class Domino:
     def __init__(self, left, right):
         self.left = left
         self.right = right
-#        self.next = None
-#        self.prev = None
         self.next = None
         self.prev = None
         self.one = None
@@ -24,30 +22,6 @@ class DominoList:
             domino.prev = self.tail
             self.tail.next = domino
             self.tail = domino
-
-# 30 20 30 02
-
-
-#    def can_lay_out(self):
-#        current = self.head
-#        while current:
-#            if current.next:
-#                if current.right == current.next.left:
-#                    current = current.next
-#                elif current.right == current.next.right:
-#                #    current.prev, current.next = current.next, current.prev #31 21 22
-#                    current = current.next
-#                elif current.left == current.next.left:
-#                    current = current.next
-#                elif current.left == current.next.right:
-#                #    current.prev, current.next = current.next, current.prev #12 31 34
-#                    current = current.next
-#                else:
-#                    return False
-#            else:
-#                break
-#        return True
-        
 
     def can_lay_out(self):
         current = self.head
@@ -107,17 +81,19 @@ def main():
     if len(dominoes) > 3:
         print("Вы ввели более трех домино. Введите не более трех домино.")
         return
-    for domino in dominoes:
-        left, right = int(domino[0]), int(domino[1])
-        if left > 6 or right > 6 or left < 0 or right < 0:
-            print("Некорректные входные данные")
-            return
-        domino_list.add_domino(left, right)
-    if domino_list.can_lay_out():
-        print("Можно, ", end="")
-        domino_list.print_dominoes()
-    else:
-        print("Нельзя выложить кости в ряд")
+    try:
+        for domino in dominoes:
+            left, right = int(domino[0]), int(domino[1])
+            if left > 6 or right > 6 or left < 0 or right < 0:
+                raise ValueError("Некорректные входные данные")
+            domino_list.add_domino(left, right)
+        if domino_list.can_lay_out():
+            print("Можно, ", end="")
+            domino_list.print_dominoes()
+        else:
+            print("Нельзя выложить кости в ряд")
+    except ValueError as e:
+        print(e)
 
 if __name__ == "__main__":
     main()
