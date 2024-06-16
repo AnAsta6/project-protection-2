@@ -1,80 +1,3 @@
-class Domino:
-    def __init__(self, left, right):
-        self.left = left
-        self.right = right
-        self.next = None
-        self.prev = None
-        self.one = None
-        self.two = None
-        self.three = None
-
-class DominoList:
-    def __init__(self):
-        self.head = None
-        self.tail = None
-
-    def add_domino(self, left, right):
-        domino = Domino(left, right)
-        if not self.head:
-            self.head = domino
-            self.tail = domino
-        else:
-            domino.prev = self.tail
-            self.tail.next = domino
-            self.tail = domino
-
-    def can_lay_out(self):
-        current = self.head
-        while current:
-            
-            if current.one:
-                if current.right == current.two.left:
-                    current = current.two
-                elif current.right == current.two.right:
-                    current = current.two
-                elif current.left == current.two.left:
-                    current = current.two
-                elif current.left == current.two.right: # 23 12
-                    current.one, current.two = current.two, current.one
-                    current = current.two
-                
-                if (current.two.left==current.three.left) or (current.two.left==current.three.right) or (current.two.right==current.three.right) or (current.two.right==current.three.left) or (current.two.left==current.one.left) or (current.two.left==current.one.right) or (current.two.right==current.one.right) or (current.two.right==current.one.left):  
-                    if current.right == current.three.left:
-                        current = current.three
-                    elif current.right == current.three.right:
-                        current = current.three
-                    elif current.left == current.three.left:
-                        current = current.three
-                    elif current.left == current.three.right: # 23 12
-                        current.one, current.three = current.three, current.one
-                        current = current.three
-                    else:
-                        return False
-                    
-            if current.two:
-                if current.right == current.three.left:
-                    current = current.three
-                elif current.right == current.three.right:
-                    current = current.three
-                elif current.left == current.three.left:
-                    current = current.three
-                elif current.left == current.three.right: # 23 12
-                    current.two, current.three = current.three, current.two
-                    current = current.three
-                else:
-                    return False
-                
-            else:
-                break
-        return True
-
-    def print_dominoes(self):
-        current = self.head
-        while current:
-            print(f"{current.left}{current.right}", end=" ")
-            current = current.next
-        print()
-
 def main():
     domino_list = DominoList()
     dominoes = input("Введите кости домино через пробел: ").split()
@@ -83,9 +6,12 @@ def main():
         return
     try:
         for domino in dominoes:
+            if not all(c.isdigit() for c in domino):
+                raise ValueError("Вы ввели некорректные символы. Введите только цифры.")
             left, right = int(domino[0]), int(domino[1])
             if left > 6 or right > 6 or left < 0 or right < 0:
                 raise ValueError("Некорректные входные данные")
+            domino_list.validate_domino(left, right)
             domino_list.add_domino(left, right)
         if domino_list.can_lay_out():
             print("Можно, ", end="")
@@ -94,6 +20,3 @@ def main():
             print("Нельзя выложить кости в ряд")
     except ValueError as e:
         print(e)
-
-if __name__ == "__main__":
-    main()
