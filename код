@@ -2,8 +2,13 @@ class Domino:
     def __init__(self, left, right):
         self.left = left
         self.right = right
+#        self.next = None
+#        self.prev = None
         self.next = None
         self.prev = None
+        self.one = None
+        self.two = None
+        self.three = None
 
 class DominoList:
     def __init__(self):
@@ -22,21 +27,69 @@ class DominoList:
 
 # 30 20 30 02
 
+
+#    def can_lay_out(self):
+#        current = self.head
+#        while current:
+#            if current.next:
+#                if current.right == current.next.left:
+#                    current = current.next
+#                elif current.right == current.next.right:
+#                #    current.prev, current.next = current.next, current.prev #31 21 22
+#                    current = current.next
+#                elif current.left == current.next.left:
+#                    current = current.next
+#                elif current.left == current.next.right:
+#                #    current.prev, current.next = current.next, current.prev #12 31 34
+#                    current = current.next
+#                else:
+#                    return False
+#            else:
+#                break
+#        return True
+        
+
     def can_lay_out(self):
         current = self.head
         while current:
-            if current.right == current.next.left:
-                current = current.next
-            elif current.right == current.next.right:
-                current.prev , current.next = current.next , current.prev
-                current = current.next
-            elif current.left == current.next.left:
-                current = current.next
-            elif current.left == current.next.right:
-                current.next , current.prev = current.prev , current.next
-                current = current.next
+            if current.one:
+                if current.right == current.two.left:
+                    current = current.two
+                elif current.right == current.two.right:
+                    current = current.two
+                elif current.left == current.two.left:
+                    current = current.two
+                elif current.left == current.two.right: # 23 12
+                    current.one, current.two = current.two, current.one
+                    current = current.two
+                    
+                if current.right == current.three.left:
+                    current = current.three
+                elif current.right == current.three.right:
+                    current = current.three
+                elif current.left == current.three.left:
+                    current = current.three
+                elif current.left == current.three.right: # 23 12
+                    current.one, current.three = current.three, current.one
+                    current = current.three
+                else:
+                    return False
+                    
+            if current.two:
+                if current.right == current.three.left:
+                    current = current.three
+                elif current.right == current.three.right:
+                    current = current.three
+                elif current.left == current.three.left:
+                    current = current.three
+                elif current.left == current.three.right: # 23 12
+                    current.two, current.three = current.three, current.two
+                    current = current.three
+                else:
+                    return False
+                
             else:
-                return False
+                break
         return True
 
     def print_dominoes(self):
@@ -48,24 +101,21 @@ class DominoList:
 
 def main():
     domino_list = DominoList()
-    while True:
-        dominoes = input("Введите кости домино (например 02) через пробел (не более 3): ").split()
-        if len(dominoes) > 3:
-            print("Вы ввели более трех домино. Введите не более трех домино.")
-            continue
-        for domino in dominoes:
-            left, right = int(domino[0]), int(domino[1])
-            if left > 6 or right > 6 or left < 0 or right < 0:
-                print("Некорректные входные данные")
-                break
-            domino_list.add_domino(left, right)
-        else:
-            if domino_list.can_lay_out():
-                print("Можно, ", end="")
-                domino_list.print_dominoes()
-            else:
-                print("Нельзя выложить кости в ряд")
-            break
+    dominoes = input("Введите кости домино через пробел: ").split()
+    if len(dominoes) > 3:
+        print("Вы ввели более трех домино. Введите не более трех домино.")
+        return
+    for domino in dominoes:
+        left, right = int(domino[0]), int(domino[1])
+        if left > 6 or right > 6 or left < 0 or right < 0:
+            print("Некорректные входные данные")
+            return
+        domino_list.add_domino(left, right)
+    if domino_list.can_lay_out():
+        print("Можно, ", end="")
+        domino_list.print_dominoes()
+    else:
+        print("Нельзя выложить кости в ряд")
 
 if __name__ == "__main__":
     main()
