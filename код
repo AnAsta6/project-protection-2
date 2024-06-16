@@ -1,0 +1,69 @@
+class Domino:
+    def __init__(self, left, right):
+        self.left = left
+        self.right = right
+        self.next = None
+        self.now = None
+        self.prev = None
+
+class DominoList:
+    def __init__(self):
+        self.head = None
+        self.tail = None
+
+    def add_domino(self, left, right):
+        domino = Domino(left, right)
+        if not self.head:
+            self.head = domino
+            self.tail = domino
+        else:
+            domino.prev = self.tail
+            self.tail.next = domino
+            self.tail = domino
+
+# 30 20 30 02
+
+    def can_lay_out(self):
+        current = self.head
+        while current:
+            if current.next:
+                if current.right == current.next.left:
+                    current = current.next
+                elif current.right == current.next.right:
+                #    current.prev, current.next = current.next, current.prev #31 21 22
+                    current = current.next
+                elif current.left == current.next.left:
+                    current = current.next
+                elif current.left == current.next.right:
+                #    current.prev, current.next = current.next, current.prev #12 31 34
+                    current = current.next
+                else:
+                    return False
+            else:
+                break
+        return True
+
+    def print_dominoes(self):
+        current = self.head
+        while current:
+            print(f"{current.left}{current.right}", end=" ")
+            current = current.next
+        print()
+
+def main():
+    domino_list = DominoList()
+    dominoes = input("Введите кости домино через пробел: ").split()
+    for domino in dominoes:
+        left, right = int(domino[0]), int(domino[1])
+        if left > 6 or right > 6 or left < 0 or right < 0:
+            print("Некорректные входные данные")
+            return
+        domino_list.add_domino(left, right)
+    if domino_list.can_lay_out():
+        print("Можно, ", end="")
+        domino_list.print_dominoes()
+    else:
+        print("Нельзя выложить кости в ряд")
+
+if __name__ == "__main__":
+    main()
